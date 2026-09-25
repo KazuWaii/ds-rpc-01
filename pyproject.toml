@@ -5,6 +5,8 @@ description = "Starter project for the RPC-01: Internal Chatbot with Role Based 
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "chromadb>=1.5.9",
     "fastapi[standard]>=0.115.12",
     "pandas>=2.3.3",
+    "sentence-transformers>=6.1.0",
 ]
