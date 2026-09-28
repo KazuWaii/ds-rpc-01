@@ -15,7 +15,11 @@ with st.sidebar:
     password = st.text_input("Password", type="password")
     if st.button("Log in"):
         try:
-            resp = requests.get(f"{API_URL}/login", auth=(username, password), timeout=10)
+            # Long timeout: the deployed backend scales to zero when idle, so
+            # the first request after a period of inactivity has to wait for
+            # the container to cold-start (pull image, load the embedding
+            # model) before it can even check the password.
+            resp = requests.get(f"{API_URL}/login", auth=(username, password), timeout=60)
             if resp.ok:
                 st.session_state["auth"] = (username, password)
                 st.session_state["role"] = resp.json()["role"]
