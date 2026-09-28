@@ -3,6 +3,9 @@ from typing import Dict
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+from app.schemas.chat import ChatRequest, ChatResponse
+from app.services.rag import answer_question
+
 
 app = FastAPI()
 security = HTTPBasic()
@@ -14,7 +17,9 @@ users_db: Dict[str, Dict[str, str]] = {
     "Sam": {"password": "financepass", "role": "finance"},
     "Peter": {"password": "pete123", "role": "engineering"},
     "Sid": {"password": "sidpass123", "role": "marketing"},
-    "Natasha": {"passwoed": "hrpass123", "role": "hr"}
+    "Natasha": {"password": "hrpass123", "role": "hr"},
+    "Nick": {"password": "fury123", "role": "admin"},
+    "Steve": {"password": "cap123", "role": "employee"}
 }
 
 
@@ -41,6 +46,7 @@ def test(user=Depends(authenticate)):
 
 
 # Protected chat endpoint
-@app.post("/chat")
-def query(user=Depends(authenticate), message: str = "Hello"):
-    return "Implement this endpoint."
+@app.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest, user=Depends(authenticate)):
+    result = answer_question(request.message, role=user["role"])
+    return ChatResponse(answer=result["answer"], sources=result["sources"], role=user["role"])
