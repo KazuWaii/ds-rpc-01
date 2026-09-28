@@ -7,7 +7,7 @@ from app.core.guardrails import is_out_of_scope, redact_pii
 
 OLLAMA_MODEL = "llama3.2"
 
-MAX_RELEVANT_DISTANCE = 0.6
+MAX_RELEVANT_DISTANCE = 0.65
 
 SYSTEM_PROMPT = (
     "You are FinSolve Technologies' internal assistant. Answer the user's question "
