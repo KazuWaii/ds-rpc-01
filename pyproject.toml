@@ -7,8 +7,10 @@ requires-python = ">=3.10"
 dependencies = [
     "chromadb>=1.5.9",
     "fastapi[standard]>=0.115.12",
+    "groq>=1.7.0",
     "ollama>=0.6.2",
     "pandas>=2.3.3",
+    "python-dotenv>=1.2.3",
     "requests>=2.34.2",
     "sentence-transformers>=6.1.0",
     "streamlit>=1.64.0",
