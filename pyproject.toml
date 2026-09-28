@@ -9,5 +9,7 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "ollama>=0.6.2",
     "pandas>=2.3.3",
+    "requests>=2.34.2",
     "sentence-transformers>=6.1.0",
+    "streamlit>=1.64.0",
 ]
