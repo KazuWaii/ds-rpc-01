@@ -1,7 +1,5 @@
 import re
-import ollama
-
-OLLAMA_MODEL = "llama3.2"
+from app.services.llm import chat
 
 _SCOPE_SYSTEM_PROMPT = (
     "You are a strict classifier for FinSolve Technologies' internal assistant. "
@@ -37,12 +35,8 @@ def redact_pii(text):
     return redacted
 
 def is_out_of_scope(question):
-    response = ollama.chat(
-        model=OLLAMA_MODEL,
-        messages=[
-            {"role": "system", "content": _SCOPE_SYSTEM_PROMPT},
-            {"role": "user", "content": question},
-        ],
-    )
-    verdict = response["message"]["content"].strip().upper()
-    return "OUTOFSCOPE" in verdict
+    verdict = chat([
+        {"role": "system", "content": _SCOPE_SYSTEM_PROMPT},
+        {"role": "user", "content": question},
+    ])
+    return "OUTOFSCOPE" in verdict.strip().upper()

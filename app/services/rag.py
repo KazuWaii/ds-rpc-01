@@ -1,11 +1,9 @@
-import ollama
+from app.services.llm import chat
 
 from app.core.roles import get_allowed_departments
 from app.services import vectorstore
 
 from app.core.guardrails import is_out_of_scope, redact_pii
-
-OLLAMA_MODEL = "llama3.2"
 
 MAX_RELEVANT_DISTANCE = 0.65
 
@@ -42,14 +40,11 @@ def answer_question(question, role, n_results=4):
         }
 
     prompt = _build_prompt(question, chunks)
-    response = ollama.chat(
-        model=OLLAMA_MODEL,
-        messages=[
+    raw_answer = chat([
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt},
-        ],
-    )
-
-    answer = redact_pii(response["message"]["content"])
+        ])
+    
+    answer = redact_pii(raw_answer)
     sources = sorted({c["metadata"]["source"] for c in chunks})
     return {"answer": answer, "sources": sources}
