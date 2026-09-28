@@ -3,6 +3,8 @@ import ollama
 from app.core.roles import get_allowed_departments
 from app.services import vectorstore
 
+from app.core.guardrails import is_out_of_scope, redact_pii
+
 OLLAMA_MODEL = "llama3.2"
 
 MAX_RELEVANT_DISTANCE = 0.6
@@ -22,6 +24,13 @@ def _build_prompt(question, chunks):
     return f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"
 
 def answer_question(question, role, n_results=4):
+    # Check if the question is out of scope
+    if is_out_of_scope(question):
+        return {
+            "answer": "I can only answer questions related to FinSolve's internal business.",
+            "sources": [],
+        }
+
     allowed_departments = get_allowed_departments(role)
     chunks = vectorstore.query(question, allowed_departments, n_results=n_results)
     chunks = [c for c in chunks if c["distance"] <= MAX_RELEVANT_DISTANCE]
@@ -41,5 +50,6 @@ def answer_question(question, role, n_results=4):
         ],
     )
 
+    answer = redact_pii(response["message"]["content"])
     sources = sorted({c["metadata"]["source"] for c in chunks})
-    return {"answer": response["message"]["content"], "sources": sources}
+    return {"answer": answer, "sources": sources}
