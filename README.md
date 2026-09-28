@@ -81,6 +81,14 @@ uv run streamlit run streamlit_app.py
 - `scripts/evaluate_retrieval.py` -- measures retrieval quality (Hit Rate@k, MRR) against a small hand-labeled question set.
 - `scripts/explore_embeddings.py` -- hands-on demo of how cosine distance is computed, cross-checked against Chroma's own numbers.
 
+## Tests
+
+```bash
+uv run pytest
+```
+
+53 unit tests (`tests/`) covering the RBAC policy, guardrails, chunking, the Ollama/Groq LLM abstraction, cost tracking, RAG orchestration (mocked retrieval/LLM), the FastAPI auth flow, and -- unmocked, against a real embedding model and a temporary Chroma collection -- the RBAC security boundary itself: a disallowed department's chunk is proven to stay excluded even when it's the closer semantic match. No network access, Ollama, or Groq key required to run them.
+
 ## Deployment (Azure Container Apps)
 
 The backend (`app/`) is deployed as a container; Streamlit isn't included in the image and is meant to be deployed separately (e.g. [Streamlit Community Cloud](https://streamlit.io/cloud), free, no Docker needed) pointed at the deployed API's URL.
