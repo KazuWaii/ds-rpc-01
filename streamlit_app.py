@@ -19,7 +19,7 @@ with st.sidebar:
             # the first request after a period of inactivity has to wait for
             # the container to cold-start (pull image, load the embedding
             # model) before it can even check the password.
-            resp = requests.get(f"{API_URL}/login", auth=(username, password), timeout=60)
+            resp = requests.get(f"{API_URL}/login", auth=(username, password), timeout=120)
             if resp.ok:
                 st.session_state["auth"] = (username, password)
                 st.session_state["role"] = resp.json()["role"]
