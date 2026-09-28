@@ -35,8 +35,8 @@ def redact_pii(text):
     return redacted
 
 def is_out_of_scope(question):
-    verdict = chat([
+    result = chat([
         {"role": "system", "content": _SCOPE_SYSTEM_PROMPT},
         {"role": "user", "content": question},
     ])
-    return "OUTOFSCOPE" in verdict.strip().upper()
+    return "OUTOFSCOPE" in result.content.strip().upper()

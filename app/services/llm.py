@@ -4,6 +4,15 @@ import ollama
 from dotenv import load_dotenv
 from groq import Groq
 
+from dataclasses import dataclass
+
+
+@dataclass
+class ChatResult:
+    content: str
+    prompt_tokens: int
+    completion_tokens: int
+
 load_dotenv()
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
@@ -19,7 +28,15 @@ def chat(messages):
             model=GROQ_MODEL,
             messages=messages,
         )
-        return response.choices[0].message.content
+        return ChatResult(
+            content=response.choices[0].message.content,
+            prompt_tokens=response.usage.prompt_tokens,
+            completion_tokens=response.usage.completion_tokens,
+        )
     else:
         response = ollama.chat(model=OLLAMA_MODEL, messages=messages)
-        return response["message"]["content"]
+        return ChatResult(
+            content=response["message"]["content"],
+            prompt_tokens=response.get("prompt_eval_count", 0),
+            completion_tokens=response.get("eval_count", 0),
+        )

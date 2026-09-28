@@ -40,11 +40,11 @@ def answer_question(question, role, n_results=4):
         }
 
     prompt = _build_prompt(question, chunks)
-    raw_answer = chat([
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": prompt},
-        ])
+    result = chat([
+    {"role": "system", "content": SYSTEM_PROMPT},
+    {"role": "user", "content": prompt},
+])
     
-    answer = redact_pii(raw_answer)
+    answer = redact_pii(result.content)
     sources = sorted({c["metadata"]["source"] for c in chunks})
     return {"answer": answer, "sources": sources}
