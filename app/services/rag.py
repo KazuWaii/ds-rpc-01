@@ -1,4 +1,6 @@
-from app.services.llm import chat
+
+from app.services.llm import chat, LLM_PROVIDER
+from app.core.monitoring import log_usage
 
 from app.core.roles import get_allowed_departments
 from app.services import vectorstore
@@ -44,6 +46,7 @@ def answer_question(question, role, n_results=4):
     {"role": "system", "content": SYSTEM_PROMPT},
     {"role": "user", "content": prompt},
 ])
+    log_usage(role, question, LLM_PROVIDER, result.prompt_tokens, result.completion_tokens)
     
     answer = redact_pii(result.content)
     sources = sorted({c["metadata"]["source"] for c in chunks})
