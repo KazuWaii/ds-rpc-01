@@ -1,0 +1,10 @@
+.venv
+.git
+__pycache__
+*.py[oc]
+.env
+logs/
+resources/vectorstore/
+streamlit_app.py
+.python-version
+README.md

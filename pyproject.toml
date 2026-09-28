@@ -14,4 +14,17 @@ dependencies = [
     "requests>=2.34.2",
     "sentence-transformers>=6.1.0",
     "streamlit>=1.64.0",
+    "torch>=2.14.0",
 ]
+
+# We only ever run the embedding model on CPU (no GPU in this project or
+# in a typical Azure App Service container), but torch's default PyPI
+# wheel on Linux drags in several GB of NVIDIA CUDA packages it never
+# uses. Pointing it at PyTorch's CPU-only index avoids that entirely.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
