@@ -2,6 +2,8 @@
 
 A RAG-based internal chatbot for a fictional company (FinSolve Technologies), with role-based access control (RBAC), guardrails, and cost monitoring. Built on top of Codebasics's [Resume Project Challenge](https://codebasics.io/challenge/codebasics-gen-ai-data-science-resume-project-challenge) starter repo.
 
+**Live demo**: [chat UI](https://kazuwaii-ds-rpc-01-streamlit-app-bil3rc.streamlit.app/) (log in with one of the test accounts below) -- backed by the API at [ds-rpc-01-api.happydune-d141058e.eastus.azurecontainerapps.io](https://ds-rpc-01-api.happydune-d141058e.eastus.azurecontainerapps.io/docs).
+
 ## Architecture
 
 ```
@@ -134,6 +136,15 @@ az containerapp show --name ds-rpc-01-api --resource-group ds-rpc-01-rg \
 **Security note**: this exposes the API's dummy hardcoded passwords (`app/main.py`) to the public internet. Fine for a learning project's demo; replace with real hashed credentials before using this pattern for anything real.
 
 **Teardown**: `az group delete --name ds-rpc-01-rg` removes every resource created above in one command.
+
+### Deploy the UI (Streamlit Community Cloud)
+
+1. Push a `requirements.txt` to the repo (already included) -- Streamlit Community Cloud installs from this file, not from `pyproject.toml`.
+2. At [share.streamlit.io](https://share.streamlit.io/), create an app from this repo, branch `main`, main file path `streamlit_app.py`.
+3. In the app's Secrets, set the deployed backend's URL so the UI stops pointing at `localhost`:
+   ```toml
+   API_URL = "https://ds-rpc-01-api.happydune-d141058e.eastus.azurecontainerapps.io"
+   ```
 
 ## Guardrails
 
